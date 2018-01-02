@@ -78,8 +78,8 @@ cmdline() {
     # Reset the positional parameters to the short options
     eval set -- $args
 
-    while getopts ":hs:r:o:p:" OPTION; do
-        case $OPTION in
+    while getopts ":hs:r:o:p:" option; do
+        case $option in
             h)  usage && exit 0 ;;
             s)  readonly MAXSIZE=$OPTARG ;;
             r)  readonly RESOLUTION=$OPTARG ;;
@@ -89,7 +89,7 @@ cmdline() {
             *)  error "Unknown option -$OPTARG";exit 1 ;;
         esac
     done
-    shift $((OPTIND -1))  # remove all options from $@
+    shift $((OPTIND-1))  # remove all options from $@
 
     # Handle non parameter arguments
     if is not equal $# 1; then
