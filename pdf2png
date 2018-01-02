@@ -25,8 +25,7 @@ usage() {
 }
 
 main() {
-    local current_size
-    local options
+    local outfile current_size options
 
     # Default values, can be overwritten by ARGS
     RESOLUTION=300 # in ppi
@@ -35,8 +34,8 @@ main() {
 
     cmdline $ARGS
 
-    is empty "OUTFILE" && OUTFILE="${INFILE%.pdf}.png"
-    echo "Outfile: ${OUTFILE}"
+    outfile="${OUTFILE:-${INFILE%.pdf}.png}"
+    echo "Outfile: ${outfile}"
 
     current_size=$(max_size_of_pdf "${INFILE}" "${RESOLUTION}")
 
@@ -46,7 +45,7 @@ main() {
         options="-f ${PAGE} -r ${RESOLUTION}"
     fi
 
-    pdf_to_png "${options}" "${INFILE}" "${OUTFILE}"
+    pdf_to_png "${options}" "${INFILE}" "${outfile}"
 
     compress "${OUTFILE}"
 
