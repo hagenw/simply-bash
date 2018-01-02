@@ -75,7 +75,7 @@ cmdline() {
         esac
     done
 
-    # Reset the positional parameters to the short options
+    # Reset $@ to the short options
     eval set -- $args
 
     while getopts ":hs:r:o:p:" option; do
