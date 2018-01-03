@@ -17,7 +17,7 @@ math::plus() {
 }
 
 # $1 - $2
-math::plus() {
+math::minus() {
     local x1="$1"
     local x2="$2"
     _bc "${x1} - ${x2}"
