@@ -40,7 +40,7 @@ $ pdf2png --max-size 400 --page 2 --output page2_400px.png input.pdf
 
 ### `filesize`
 
-Returns the file size in bytes.
+Return the file size in bytes.
 Example:
 
 ```sh
@@ -50,8 +50,8 @@ $ filesize $(which filesize)
 
 ### `warning` and `error`
 
-`warning` and `error` show the provided message and copy it to the stderr
-with `>&2`. Examples:
+Show the provided message and copy it to stderr with `>&2`.
+Examples:
 
 ```sh
 $ warning "Problem"
@@ -94,7 +94,7 @@ math::abs -1        # 1
 
 ### `units.sh`
 
-Converting between pixels, points, and inches.
+Convert between pixels, points, and inches.
 
 Usage:
 
