@@ -4,7 +4,30 @@ Simply Bash
 Bash scripts and libraries to make your life easier.
 
 
-## Scripts
+## Installation
+
+As most of the scripts of this package source the included libraries, all files
+of simply-bash have to be stored in the same folder. The easiest way to achieve
+this is to clone the repository and add it to your `$PATH`:
+
+```bash
+git clone https://github.com/hagenw/simply-bash.git ~/git/simply-bash
+echo 'PATH="${PATH}:${HOME}/git/simply-bash"' >> ~/.bashrc
+```
+
+Replace `~/git/simply-bash` with your desired directory.
+
+Simply-bash depends on [is.sh], which must be installed as well by storing it in
+the simply-bash folder or in another folder included in `$PATH`, e.g.
+
+```bash
+wget https://github.com/qzb/is.sh/raw/master/is.sh -O "${HOME}/.local/bin/is"
+```
+
+[is.sh]: https://github.com/qzb/is.sh
+
+
+## Usage
 
 ### `pdf2png`
 
@@ -43,9 +66,6 @@ Error: Failed
 $ echo $?
 1
 ```
-
-
-## Libraries
 
 ### `math.sh`
 
