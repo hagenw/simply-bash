@@ -1,0 +1,97 @@
+#!/bin/bash
+
+readonly PROGNAME=$(basename "$0")
+readonly ARGS=("$@")
+
+usage() {
+    cat <<- EOF
+	Usage: ${PROGNAME} [OPTIONS] FILE
+
+	Extract the given pages from a PDF file.
+
+	Options:
+	    -p --pages          page or pages: 1, 3-4, 5-2, 1-4even, "1 3 10"
+	                        default: 1
+	    -o --output         name of the output PDF file
+	                        default: same as PDF file, but including page
+	                        numbers in its filename
+	    -h --help           show this help
+	EOF
+}
+
+main() {
+    local outfile pages
+
+    cmdline "${ARGS[@]}"
+
+    pages=${PAGES:-1}
+    outfile=${OUTFILE:-${INFILE%.pdf}_${pages}.pdf}
+
+    extract_pages "${INFILE}" "${pages}" "${outfile}"
+
+    return
+}
+
+# Parse arguments
+# (http://bit.ly/defensive-bash) (http://bit.ly/getopts_tutorial)
+# $@ - all parameters given to the script
+cmdline() {
+    local arg=
+
+    for arg; do
+        case "${arg}" in
+            # Translate --gnu-long-options to -g (short options)
+            --help)         args="${args}-h " ;;
+            --output)       args="${args}-o " ;;
+            --pages)        args="${args}-p " ;;
+            --*)            error "Unknown option ${arg}"; exit 1 ;;
+            *)              # Pass through anything else
+                            is equal "${arg:0:1}" "-" || arg="\"${arg}\""
+                            args="${args}${arg} "
+                            ;;
+        esac
+    done
+
+    # Reset $@ to the short options
+    eval set -- "${args}"
+
+    while getopts ':ho:p:' arg; do
+        case "${arg}" in
+            h)  usage && exit 0 ;;
+            o)  readonly OUTFILE=${OPTARG} ;;
+            p)  readonly PAGES=${OPTARG} ;;
+            :)  error "-${OPTARG} needs an argument"; exit 1 ;;
+            *)  error "Unknown option -${OPTARG}";exit 1 ;;
+        esac
+    done
+    shift $((OPTIND-1))  # remove all options from $@
+
+    # Handle non parameter arguments
+    if is not equal $# 1; then
+        error 'Exactly one pdf file has to be given.'
+        exit 1
+    fi
+    readonly INFILE=$1
+
+    return 0
+}
+
+# $1 - input PDF filename
+# $2 - page numbers, e.g. "1", "3-4", "3-end", "1 3"
+# $3 - output PDF filename
+extract_pages() {
+    local infile=$1
+    local pages=($2)
+    local outfile=$3
+
+    if is available pdftk; then
+        pdftk "${infile}" cat "${pages[@]}" output "${outfile}" dont_ask
+        return $?
+    else
+        error 'pdftk is needed for page extraction.'
+        exit 1
+    fi
+}
+
+
+main

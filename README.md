@@ -38,6 +38,15 @@ Example:
 $ pdf2png --max-size 400 --page 2 --output page2_400px.png input.pdf
 ```
 
+### `pdfextract`
+
+Extract pages from a PDF file.
+Example:
+
+```sh
+$ pdfextract --pages "1 3-5" --output output.pdf input.pdf
+```
+
 ### `filesize`
 
 Return the file size in bytes.
