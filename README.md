@@ -74,7 +74,7 @@ Examples:
 ```sh
 $ warning "Problem"
 Warning: Problem
-$ echo $0
+$ echo $?
 0
 ```
 
