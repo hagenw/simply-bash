@@ -47,6 +47,15 @@ Example:
 $ pdfextract --pages "1 3-5" --output output.pdf input.pdf
 ```
 
+### `pdfmerge`
+
+Merge PDF files.
+Example:
+
+```sh
+$ pdfmerge --output output.pdf input1.pdf input2.pdf input3.pdf
+```
+
 ### `filesize`
 
 Return the file size in bytes.
