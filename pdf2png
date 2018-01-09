@@ -2,12 +2,12 @@
 
 source "units.sh"
 
-readonly PROGNAME=$(basename $0)
-readonly ARGS="$@"
+readonly PROGNAME=$(basename "$0")
+readonly ARGS=("$@")
 
 usage() {
     cat <<- EOF
-	Usage: $PROGNAME [OPTIONS] FILE
+	Usage: ${PROGNAME} [OPTIONS] FILE
 
 	Generate a thumbnail of the given PDF file.
 
@@ -32,14 +32,14 @@ main() {
     MAXSIZE=800    # in px
     PAGE=1
 
-    cmdline $ARGS
+    cmdline "${ARGS[@]}"
 
-    outfile="${OUTFILE:-${INFILE%.pdf}.png}"
+    outfile=${OUTFILE:-${INFILE%.pdf}.png}
     echo "Outfile: ${outfile}"
 
     current_size=$(max_size_of_pdf "${INFILE}" "${RESOLUTION}")
 
-    if is gt ${current_size} ${MAXSIZE}; then
+    if is gt "${current_size}" "${MAXSIZE}"; then
         options="-f ${PAGE} -r ${RESOLUTION} -scale-to ${MAXSIZE}"
     else
         options="-f ${PAGE} -r ${RESOLUTION}"
@@ -59,7 +59,7 @@ cmdline() {
     local arg=
 
     for arg; do
-        case "$arg" in
+        case "${arg}" in
             # Translate --gnu-long-options to -g (short options)
             --help)         args="${args}-h " ;;
             --max-size)     args="${args}-s " ;;
@@ -75,17 +75,17 @@ cmdline() {
     done
 
     # Reset $@ to the short options
-    eval set -- $args
+    eval set -- "${args}"
 
-    while getopts ":hs:r:o:p:" option; do
-        case $option in
+    while getopts ':hs:r:o:p:' arg; do
+        case "${arg}" in
             h)  usage && exit 0 ;;
-            s)  readonly MAXSIZE=$OPTARG ;;
-            r)  readonly RESOLUTION=$OPTARG ;;
-            o)  readonly OUTFILE=$OPTARG ;;
-            p)  readonly PAGE=$OPTARG ;;
-            :)  error "-$OPTARG needs an argument"; exit 1 ;;
-            *)  error "Unknown option -$OPTARG";exit 1 ;;
+            s)  readonly MAXSIZE=${OPTARG} ;;
+            r)  readonly RESOLUTION=${OPTARG} ;;
+            o)  readonly OUTFILE=${OPTARG} ;;
+            p)  readonly PAGE=${OPTARG} ;;
+            :)  error "-${OPTARG} needs an argument"; exit 1 ;;
+            *)  error "Unknown option -${OPTARG}";exit 1 ;;
         esac
     done
     shift $((OPTIND-1))  # remove all options from $@
@@ -95,7 +95,7 @@ cmdline() {
         error "Exactly one pdf file has to be given."
         exit 1
     fi
-    readonly INFILE="$1"
+    readonly INFILE=$1
 
     return 0
 }
@@ -103,15 +103,15 @@ cmdline() {
 # $1 - PDF filename
 # $2 - resolution in ppi
 max_size_of_pdf() {
-    local pdf_file="$1"
-    local resolution_in_ppi="$2"
+    local pdf_file=$1
+    local resolution_in_ppi=$2
     local max_size_in_pt
     local max_size_in_px
 
     max_size_in_pt=$(pdfinfo "${pdf_file}" \
                    | awk '/Page size/{ if ($3>$5) print $3; else print $5 }')
 
-    max_size_in_px=$(units::pt_to_px ${max_size_in_pt} ${resolution_in_ppi})
+    max_size_in_px=$(units::pt_to_px "${max_size_in_pt}" "${resolution_in_ppi}")
 
     echo "${max_size_in_px}"
 }
@@ -120,23 +120,23 @@ max_size_of_pdf() {
 # $2 - PDF filename
 # $3 - PNG filename
 pdf_to_png() {
-    local options="$1"
-    local pdf_file="$2"
-    local png_file="$3"
+    local options=($1)
+    local pdf_file=$2
+    local png_file=$3
 
-    pdftoppm -singlefile -aa yes -aaVector yes -png ${options} "${pdf_file}" \
-        > "${png_file}"
+    pdftoppm -singlefile -aa yes -aaVector yes -png "${options[@]}" \
+        "${pdf_file}" > "${png_file}"
 }
 
 # $1 - PNG filename
 compress() {
-    local png_file="$1"
+    local png_file=$1
 
     if is available zopflipng; then
         zopflipng -y "${png_file}" "${png_file}" >/dev/null
         return $?
     else
-        warning "Install zpflipng to achieve smaller png files"
+        warning 'Install zpflipng to achieve smaller png files'
     fi
 }
 
