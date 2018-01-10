@@ -18,14 +18,13 @@ usage() {
 }
 
 main() {
-    local infile1 outfile
+    local outfile
 
     cmdline "${ARGS[@]}"
 
-    infile1="${INFILES%% *}"
-    outfile="${OUTFILE:-${infile1%.pdf}_merged.pdf}"
+    outfile="${OUTFILE:-${INFILES[0]%.pdf}_merged.pdf}"
 
-    merge_pdfs "${INFILES}" "${outfile}"
+    merge_pdfs "${outfile}" "${INFILES[@]}"
 
     return
 }
@@ -67,16 +66,16 @@ cmdline() {
         error 'At least two input PDF files are needed.'
         exit 1
     fi
-    readonly INFILES=$*
+    readonly INFILES=("$@")
 
     return 0
 }
 
-# $1 - input PDF filenames
-# $2 - output pdf filename
+# $1 - output PDF filename
+# $2 - array of input PDF filenames
 merge_pdfs() {
-    local infiles=($1)
-    local outfile=$2
+    local outfile=$1 && shift
+    local infiles=("$@")
 
     if is available pdftk; then
         pdftk "${infiles[@]}" cat output "${outfile}" dont_ask
