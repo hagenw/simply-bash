@@ -80,7 +80,7 @@ merge_pdfs() {
     if is available pdftk; then
         pdftk "${infiles[@]}" cat output "${outfile}" dont_ask
         return $?
-    else:
+    else
         error 'pdftk is needed to merge PDFs.'
         exit 1
     fi
