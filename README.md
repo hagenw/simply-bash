@@ -56,6 +56,15 @@ Example:
 $ pdfmerge --output output.pdf input1.pdf input2.pdf input3.pdf
 ```
 
+### `pdfshrink`
+
+Shrink a PDF file.
+Example:
+
+```sh
+$ pdfshrink --aggressive input.pdf
+```
+
 ### `filesize`
 
 Return the file size in bytes.

@@ -1,0 +1,165 @@
+#!/bin/bash
+
+readonly PROGNAME=$(basename "$0")
+readonly ARGS=("$@")
+
+usage() {
+    cat <<- EOF
+	Usage: ${PROGNAME} [OPTIONS] INFILE
+
+	Lossless or lossy compression of a PDF file.
+
+	Options:
+	    -o --output         name of the output PDF file
+	                        default: overwrite input file
+	    -a --agressive      lossy reduction
+	    -h --help           show this help
+	EOF
+}
+
+# $1 - input file name
+# $2 - output file name
+main() {
+    local outfile tmpfile be_aggressive smaller_file
+
+    cmdline "${ARGS[@]}"
+
+    outfile=${OUTFILE:-${INFILE}}
+    tmpfile=$(tmp_file)
+    trap "rm -f ${tmpfile}" EXIT
+    be_aggressive=${BE_AGGRESSIVE:-false}
+
+    shrink "${INFILE}" "${tmpfile}" "${be_aggressive}"
+    smaller_file=$(select_smaller "${INFILE}" "${tmpfile}")
+    move_to_outfile "${smaller_file}" "${outfile}"
+
+    return
+}
+
+# Parse arguments
+# (http://bit.ly/defensive-bash) (http://bit.ly/getopts_tutorial)
+# $@ - all parameters given to the script
+cmdline() {
+    local arg=
+
+    for arg; do
+        case "${arg}" in
+            # Translate --gnu-long-options to -g (short options)
+            --help)         args="${args}-h " ;;
+            --agressive)    args="${args}-a " ;;
+            --output)       args="${args}-o " ;;
+            --*)            error "Unknown option $arg"; exit 1 ;;
+            *)              # Pass through anything else
+                            is equal "${arg:0:1}" "-" || arg="\"${arg}\""
+                            args="${args}${arg} "
+                            ;;
+        esac
+    done
+
+    # Reset $@ to the short options
+    eval set -- "${args}"
+
+    while getopts ':hao:' arg; do
+        case "${arg}" in
+            h)  usage && exit 0 ;;
+            a)  readonly BE_AGGRESSIVE=true ;;
+            o)  readonly OUTFILE=${OPTARG} ;;
+            :)  error "-${OPTARG} needs an argument"; exit 1 ;;
+            *)  error "Unknown option -${OPTARG}";exit 1 ;;
+        esac
+    done
+    shift $((OPTIND-1))  # remove all options from $@
+
+    # Handle non parameter arguments
+    if is not equal $# 1; then
+        error 'Exactly one pdf file has to be given.'
+        exit 1
+    fi
+    readonly INFILE=$1
+
+    return 0
+}
+
+# $1 - input file name
+# $2 - output file name
+# $3 - lossy compression (boolean)
+shrink() {
+    local infile=$1
+    local outfile=$2
+    local be_aggressive=$3
+    local lossy_options
+
+    if "${be_aggressive}"; then
+        lossy_options="-dPDFSETTINGS=/screen \
+                       -dEmbedAllFonts=true \
+                       -dSubsetFonts=true \
+                       -dColorImageDownsampleType=/Bicubic \
+                       -dColorImageResolution=72 \
+                       -dGrayImageDownsampleType=/Bicubic \
+                       -dGrayImageResolution=72 \
+                       -dMonoImageDownsampleType=/Bicubic \
+                       -dMonoImageResolution=72"
+    else
+        lossy_options=''
+    fi
+
+    if is available gs; then
+        gs -sDEVICE=pdfwrite \
+           -dCompatibilityLevel=1.4 \
+           -dNOPAUSE \
+           -dQUIET \
+           -dBATCH \
+           ${lossy_options} \
+           -sOutputFile="${outfile}" \
+           "${infile}"
+    else
+        error 'gs is needed to shrink PDFs.'
+        exit 1
+    fi
+}
+
+# $1 - input file name
+# $2 - output file name
+select_smaller() {
+    local infile=$1
+    local outfile=$2
+    local insize outsize selected_file
+
+    is file "${infile}"  || return 0
+    is file "${outfile}" || return 0
+
+    insize=$(filesize "${infile}")
+    outsize=$(filesize "${outfile}")
+
+    if is lt "${insize}" "${outsize}"; then
+        warning 'No reduction in size possible, try --aggressive.'
+        selected_file=${infile}
+    else
+        selected_file=${outfile}
+    fi
+
+    echo "${selected_file}"
+}
+
+# $1 - input file name
+# $2 - output file name
+move_to_outfile() {
+    local infile=$1
+    local outfile=$2
+
+    if is not equal "${infile}" "${outfile}"; then
+        cp "${infile}" "${outfile}"
+    fi
+}
+
+tmp_file() {
+    local tmpdir tmpfile
+
+    tmpdir=${TMPDIR:-/tmp}
+    tmpfile=$(mktemp "${tmpdir}/${PROGNAME}-XXXXXX")
+
+    echo "${tmpfile}"
+}
+
+
+main
