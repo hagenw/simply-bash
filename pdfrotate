@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# TODO:
+# * Check wether I should add a page option, that only a specific page is
+#   rotated
+# * Differentiate between 90 and 180 degree rotations?
+
+readonly PROGNAME=$(basename $0)
+readonly ARGS=("$@")
+
+usage() {
+    cat <<- EOF
+	Usage: ${PROGNAME} [OPTIONS] INFILE
+
+	Rotate a PDF file.
+
+	Options:
+	    -d --direction      direction of rotation (clockwise or anti-clockwise)
+	                        default: clockwise
+	    -o --output         name of the output PDF file
+	                        default: inplace
+	    -h --help           show this help
+	EOF
+}
+
+# $1 - input file name
+main() {
+    local infile=$1
+    local outfile direction
+
+    cmdline "${ARGS[@]}"
+
+    outfile=${OUTFILE:-${INFILE}}
+    direction=${DIRECTION:-clockwise}
+
+    rotate "${INFILE}" "${outfile}" "${direction}"
+
+    return
+}
+
+# Parse arguments
+# (http://bit.ly/defensive-bash) (http://bit.ly/getopts_tutorial)
+# $@ - all parameters given to the script
+cmdline() {
+    local arg=
+
+    for arg; do
+        case "${arg}" in
+            # Translate --gnu-long-options to -g (short options)
+            --help)         args="${args}-h " ;;
+            --direction)    args="${args}-d " ;;
+            --output)       args="${args}-o " ;;
+            --*)            error "Unknown option $arg"; exit 1 ;;
+            *)              # Pass through anything else
+                            is equal "${arg:0:1}" "-" || arg="\"${arg}\""
+                            args="${args}${arg} "
+                            ;;
+        esac
+    done
+
+    # Reset $@ to the short options
+    eval set -- "${args}"
+
+    while getopts ':hd:o:' arg; do
+        case "${arg}" in
+            h)  usage && exit 0 ;;
+            a)  readonly DIRECTION=${OPTARG} ;;
+            o)  readonly OUTFILE=${OPTARG} ;;
+            :)  error "-${OPTARG} needs an argument"; exit 1 ;;
+            *)  error "Unknown option -${OPTARG}";exit 1 ;;
+        esac
+    done
+    shift $((OPTIND-1))  # remove all options from $@
+
+    # Handle non parameter arguments
+    if is not equal $# 1; then
+        error "Exactly one pdf file has to be given."
+        exit 1
+    fi
+    readonly INFILE=$1
+
+    return 0
+}
+
+# $1 - input file name
+# $2 - output file name
+# $3 - direction
+rotate() {
+    local infile=$1
+    local outfile=$2
+    local direction=$3
+
+    direction=$(translate_direction "${direction}")
+
+    if is available pdftk; then
+        pdftk "${infile}" cat 1-"${direction}" output "${outfile}" dont_ask
+        return $?
+    else
+        error 'pdftk is needed for page extraction.'
+        exit 1
+    fi
+}
+
+# $1 - direction (`clockwise` or `anti-clockwise`)
+translate_direction() {
+    local direction=$1
+
+    if is equal "${direction}" 'clockwise'; then
+        direction='endeast'
+    elif is equal "${direction}" 'anti-clockwise'; then
+        direction='endwest'
+    else
+        error 'Direction has to be `clockwise` or `anti-clockwise`.'
+    fi
+
+    echo "${direction}"
+}
+
+main
