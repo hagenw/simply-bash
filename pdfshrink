@@ -20,17 +20,17 @@ usage() {
 # $1 - input file name
 # $2 - output file name
 main() {
-    local outfile tmpfile be_aggressive smaller_file
+    local outfile _tmpfile be_aggressive smaller_file
 
     cmdline "${ARGS[@]}"
 
     outfile=${OUTFILE:-${INFILE}}
-    tmpfile=$(tmp_file)
-    trap "rm -f ${tmpfile}" EXIT
+    _tmpfile=$(tmpfile --basename "${PROGNAME}")
+    trap "rm -f ${_tmpfile}" EXIT
     be_aggressive=${BE_AGGRESSIVE:-false}
 
-    shrink "${INFILE}" "${tmpfile}" "${be_aggressive}"
-    smaller_file=$(select_smaller "${INFILE}" "${tmpfile}")
+    shrink "${INFILE}" "${_tmpfile}" "${be_aggressive}"
+    smaller_file=$(select_smaller "${INFILE}" "${_tmpfile}")
     move_to_outfile "${smaller_file}" "${outfile}"
 
     return
@@ -150,15 +150,6 @@ move_to_outfile() {
     if is not equal "${infile}" "${outfile}"; then
         cp "${infile}" "${outfile}"
     fi
-}
-
-tmp_file() {
-    local tmpdir tmpfile
-
-    tmpdir=${TMPDIR:-/tmp}
-    tmpfile=$(mktemp "${tmpdir}/${PROGNAME}-XXXXXX")
-
-    echo "${tmpfile}"
 }
 
 
