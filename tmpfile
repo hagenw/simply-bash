@@ -1,0 +1,77 @@
+#!/bin/bash
+
+readonly PROGNAME=$(basename "$0")
+readonly ARGS=("$@")
+
+usage() {
+    cat <<- EOF
+	Usage: ${PROGNAME} [OPTIONS]
+
+	Creates a temp file under \$TMPDIR.
+
+	Options:
+	    -b --basename       basename of temp file
+	    -h --help           show this help
+	EOF
+}
+
+# $1 - input file name
+# $2 - output file name
+main() {
+    local basename
+
+    cmdline "${ARGS[@]}"
+
+    basename=${BASENAME:-$(randomstring)}
+    tmp_file "${basename}"
+
+    return
+}
+
+
+# Parse arguments
+# (http://bit.ly/defensive-bash) (http://bit.ly/getopts_tutorial)
+# $@ - all parameters given to the script
+cmdline() {
+    local arg=
+
+    for arg; do
+        case "${arg}" in
+            # Translate --gnu-long-options to -g (short options)
+            --help)         args="${args}-h " ;;
+            --basename)     args="${args}-b " ;;
+            --*)            error "Unknown option $arg"; exit 1 ;;
+            *)              # Pass through anything else
+                            is equal "${arg:0:1}" "-" || arg="\"${arg}\""
+                            args="${args}${arg} "
+                            ;;
+        esac
+    done
+
+    # Reset $@ to the short options
+    eval set -- "${args}"
+
+    while getopts ':hb:' arg; do
+        case "${arg}" in
+            h)  usage && exit 0 ;;
+            b)  readonly BASENAME=${OPTARG} ;;
+            :)  error "-${OPTARG} needs an argument"; exit 1 ;;
+            *)  error "Unknown option -${OPTARG}";exit 1 ;;
+        esac
+    done
+    shift $((OPTIND-1))  # remove all options from $@
+
+    return 0
+}
+
+# $1 - basename
+tmp_file() {
+    local basename=$1
+    local tmpdir
+
+    tmpdir=${TMPDIR:-/tmp}
+    mktemp "${tmpdir}/${basename}-XXXXXX"
+}
+
+
+main

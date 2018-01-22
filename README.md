@@ -85,6 +85,16 @@ $ randomstring --length 8
 75v4dvoH
 ```
 
+### `tmpfile`
+
+Create a temp file and return its name.
+Example:
+
+```sh
+$ tmpfile --basename myprog
+/tmp/myprog-Gsfg6p
+```
+
 ### `warning` and `error`
 
 Show the provided message and copy it to stderr with `>&2`.
