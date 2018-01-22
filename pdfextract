@@ -15,19 +15,28 @@ usage() {
 	    -o --output         name of the output PDF file
 	                        default: same as PDF file, but including page
 	                        numbers in its filename
+	    -i --inplace        overwrite the input PDF. The --output option is
+	                        ignored if --inplace is chosen
 	    -h --help           show this help
 	EOF
 }
 
 main() {
-    local outfile pages
+    local pages outfile _tmpfile
 
     cmdline "${ARGS[@]}"
 
     pages=${PAGES:-1}
-    outfile=${OUTFILE:-${INFILE%.pdf}_${pages}.pdf}
+    if is true "${INPLACE}"; then
+        outfile=${INFILE}
+    else
+        outfile=${OUTFILE:-${INFILE%.pdf}_${pages}.pdf}
+    fi
+    _tmpfile=$(tmpfile --basename "${PROGNAME}")
+    trap "rm -f ${_tmpfile}" EXIT
 
-    extract_pages "${INFILE}" "${pages}" "${outfile}"
+    extract_pages "${INFILE}" "${pages}" "${_tmpfile}"
+    mv "${_tmpfile}" "${outfile}"
 
     return
 }
@@ -44,6 +53,7 @@ cmdline() {
             --help)         args="${args}-h " ;;
             --output)       args="${args}-o " ;;
             --pages)        args="${args}-p " ;;
+            --inplace)      args="${args}-i " ;;
             --*)            error "Unknown option ${arg}"; exit 1 ;;
             *)              # Pass through anything else
                             is equal "${arg:0:1}" "-" || arg="\"${arg}\""
@@ -55,11 +65,12 @@ cmdline() {
     # Reset $@ to the short options
     eval set -- "${args}"
 
-    while getopts ':ho:p:' arg; do
+    while getopts ':ho:p:i' arg; do
         case "${arg}" in
             h)  usage && exit 0 ;;
             o)  readonly OUTFILE=${OPTARG} ;;
             p)  readonly PAGES=${OPTARG} ;;
+            i)  readonly INPLACE=true ;;
             :)  error "-${OPTARG} needs an argument"; exit 1 ;;
             *)  error "Unknown option -${OPTARG}";exit 1 ;;
         esac
