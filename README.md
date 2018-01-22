@@ -1,7 +1,9 @@
-Simply Bash
-===========
+# Simply Bash [![Build][travis-image]][travis-url]
 
 Bash scripts and libraries to make your life easier.
+
+[travis-image]: https://img.shields.io/travis/hagenw/simply-bash.svg?branch=master
+[travis-url]: https://travis-ci.org/hagenw/simply-bash
 
 
 ## Installation
