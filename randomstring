@@ -1,0 +1,83 @@
+#!/bin/bash
+
+readonly PROGNAME=$(basename "$0")
+readonly ARGS=("$@")
+
+usage() {
+    cat <<- EOF
+	Usage: ${PROGNAME} [OPTIONS]
+
+	Returns a random alphanumeric string (upper and lowercase).
+
+	Options:
+	    -l --length         lenght of the random string (default: 12)
+	    -t --text           upper- and lowercase text only
+	    -n --number         number only
+	    -h --help           show this help
+	
+	EOF
+}
+
+main() {
+    local lenght alphabet
+
+    cmdline "${ARGS[@]}"
+
+    length=${LENGTH:-12}
+    alphabet=${ALPHABET:-A-Za-z0-9}
+
+    random_string "${length}" "${alphabet}"
+
+    return
+}
+
+# Parse arguments
+# (http://bit.ly/defensive-bash) (http://bit.ly/getopts_tutorial)
+# $@ - all parameters given to the script
+cmdline() {
+    local arg=
+
+    for arg; do
+        case "${arg}" in
+            # Translate --gnu-long-options to -g (short options)
+            --help)         args="${args}-h " ;;
+            --length)       args="${args}-l " ;;
+            --text)         args="${args}-t " ;;
+            --number)       args="${args}-n " ;;
+            --*)            error "Unknown option $arg"; exit 1 ;;
+            *)              # Pass through anything else
+                            is equal "${arg:0:1}" "-" || arg="\"${arg}\""
+                            args="${args}${arg} "
+                            ;;
+        esac
+    done
+
+    # Reset $@ to the short options
+    eval set -- "${args}"
+
+    while getopts ':hl:tn' arg; do
+        case "${arg}" in
+            h)  usage && exit 0 ;;
+            l)  readonly LENGTH=${OPTARG} ;;
+            t)  ALPHABET='A-Za-z' ;;
+            n)  ALPHABET='0-9' ;;
+            :)  error "-${OPTARG} needs an argument"; exit 1 ;;
+            *)  error "Unknown option -${OPTARG}";exit 1 ;;
+        esac
+    done
+    shift $((OPTIND-1))  # remove all options from $@
+
+    return 0
+}
+
+# $1 - string length
+# $2 - alphabet of random string
+random_string() {
+    local length=$1
+    local alphabet=$2
+
+    tr -dc "${alphabet}" < /dev/urandom | head -c "${length}"
+}
+
+
+main

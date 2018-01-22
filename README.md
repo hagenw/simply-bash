@@ -75,6 +75,16 @@ $ filesize $(which filesize)
 47
 ```
 
+### `randomstring`
+
+Return a random alphanumeric string.
+Example:
+
+```sh
+$ randomstring --length 8
+75v4dvoH
+```
+
 ### `warning` and `error`
 
 Show the provided message and copy it to stderr with `>&2`.
