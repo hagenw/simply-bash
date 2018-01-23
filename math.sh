@@ -1,12 +1,12 @@
 # Math library
 
 [ -v "PI" ] || PI='3.14159265358979323846264338327950288'; declare -r PI
-SCALE=8 # precission of bc
+BC_PRECISSION=8
 
 # $1 - math expression to be performed by bc
 _bc() {
     local expression=$1
-    echo "scale=${SCALE}; ${expression}" | bc -lq
+    echo "scale=${BC_PRECISSION}; ${expression}" | bc -lq
 }
 
 # $1 + $2
