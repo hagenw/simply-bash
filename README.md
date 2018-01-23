@@ -31,18 +31,32 @@ by:
 include math.sh
 ```
 
-[simply-bash] depends on [is.sh], which must be installed as well by storing it
-in the simply-bash folder or in another folder included in `$PATH`, e.g.
-
-```bash
-wget https://github.com/qzb/is.sh/raw/master/is.sh -O "${HOME}/.local/bin/is"
-```
-
 [simply-bash]: https://github.com/hagenw/simply-bash
-[is.sh]: https://github.com/qzb/is.sh
 
 
 ## Usage
+
+Every script comes with a help message explaining all of it options, e.g. `is
+--help`. In the following only short examples are shown to demonstrate the main
+purpose of the scripts. The included functions of the libraries are all shown.
+
+### `is`
+
+Replacement for test command, included from [is.sh].
+Example:
+```sh
+var=123
+
+if is equal $var 123.0; then
+    echo "it just works"
+fi
+
+if is not a substring $var "foobar"; then
+    echo "and it's easy to read"
+fi
+```
+
+[is.sh]: https://github.com/qzb/is.sh
 
 ### `filesize`
 
