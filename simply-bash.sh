@@ -4,10 +4,16 @@
 
 readonly SIMPLY_BASH_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 
+# Make all scripts visible
+PATH="${PATH}:${SIMPLY_BASH_PATH}"
+
+# $1 - library file
 include() {
     local file=$1
 
     source "${SIMPLY_BASH_PATH}/${file}"
 }
 
-PATH="${PATH}:${SIMPLY_BASH_PATH}"
+# Make python environment functions available
+include 'pyenvs.sh'
+include 'completion/activate-completion.bash'

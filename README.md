@@ -135,11 +135,11 @@ units::pt_to_px 20 $res_in_ppi   # 83.33333100
 ### `pyenvs.sh`
 
 Manage python virtual environments in the folder `$HOME/.envs`. 
+This gets already sourced by `simply-bash.sh`, you can use it straight ahead.
 
 Usage:
 
 ```bash
-include pyenvs.sh
 create env_name python3  # create virtual `env_name` and activate it
 envs                     # list available environments
 activate env_name        # activate virtual environment `env_name`
