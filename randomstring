@@ -19,7 +19,7 @@ usage() {
 }
 
 main() {
-    local lenght alphabet
+    local length alphabet
 
     cmdline "${ARGS[@]}"
 
