@@ -31,42 +31,6 @@ wget https://github.com/qzb/is.sh/raw/master/is.sh -O "${HOME}/.local/bin/is"
 
 ## Usage
 
-### `pdf2png`
-
-Generate a thumbnail of the given PDF file as a compressed PNG file.
-Example:
-
-```sh
-$ pdf2png --max-size 400 --page 2 --output page2_400px.png input.pdf
-```
-
-### `pdfextract`
-
-Extract pages from a PDF file.
-Example:
-
-```sh
-$ pdfextract --pages "1 3-5" --output output.pdf input.pdf
-```
-
-### `pdfmerge`
-
-Merge PDF files.
-Example:
-
-```sh
-$ pdfmerge --output output.pdf input1.pdf input2.pdf input3.pdf
-```
-
-### `pdfshrink`
-
-Shrink a PDF file.
-Example:
-
-```sh
-$ pdfshrink --aggressive input.pdf
-```
-
 ### `filesize`
 
 Return the file size in bytes.
