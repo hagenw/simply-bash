@@ -1,6 +1,6 @@
 # Math library
 
-[ -v "PI" ] || declare -r PI='3.14159265358979323846264338327950288'
+[ -v "PI" ] || PI='3.14159265358979323846264338327950288'; declare -r PI
 SCALE=8 # precission of bc
 
 # $1 - math expression to be performed by bc
