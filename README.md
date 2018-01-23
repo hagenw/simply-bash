@@ -8,24 +8,37 @@ Bash scripts and libraries to make your life easier.
 
 ## Installation
 
-As most of the scripts of this package source the included libraries, all files
-of simply-bash have to be stored in the same folder. The easiest way to achieve
-this is to clone the repository and add it to your `$PATH`:
+All files of simply-bash have to be stored in the same folder. The easiest way
+to achieve this is to clone the repository:
 
 ```bash
 git clone https://github.com/hagenw/simply-bash.git ~/git/simply-bash
-echo 'PATH="${PATH}:${HOME}/git/simply-bash"' >> ~/.bashrc
 ```
 
 Replace `~/git/simply-bash` with your desired directory.
 
-Simply-bash depends on [is.sh], which must be installed as well by storing it in
-the simply-bash folder or in another folder included in `$PATH`, e.g.
+In order to use it you have to source the `simply-bash.sh` file:
+
+```bash
+source ~/git/simply-bash/simply-bash.sh
+```
+
+To automate this, add it to your `.bashrc`.  Afterwards all scripts are
+available and you can source the libraries independent of your current directory
+by:
+
+```bash
+include math.sh
+```
+
+[simply-bash] depends on [is.sh], which must be installed as well by storing it
+in the simply-bash folder or in another folder included in `$PATH`, e.g.
 
 ```bash
 wget https://github.com/qzb/is.sh/raw/master/is.sh -O "${HOME}/.local/bin/is"
 ```
 
+[simply-bash]: https://github.com/hagenw/simply-bash
 [is.sh]: https://github.com/qzb/is.sh
 
 
@@ -88,7 +101,7 @@ scripts.
 Usage:
 
 ```bash
-source math.sh
+include math.sh
 math::plus 1 2      # 3
 math::minus 3 2     # 1
 math::divide 6 2    # 3.00000000
@@ -112,7 +125,7 @@ Convert between pixels, points, and inches.
 Usage:
 
 ```bash
-source units.sh
+include units.sh
 res_in_ppi=300
 units::pt_to_inch 300            # 4.16666666
 units::inch_to_px 4 $res_in_ppi  # 1200
@@ -126,7 +139,7 @@ Manage python virtual environments in the folder `$HOME/.envs`.
 Usage:
 
 ```bash
-source pyenvs.sh
+include pyenvs.sh
 create env_name python3  # create virtual `env_name` and activate it
 envs                     # list available environments
 activate env_name        # activate virtual environment `env_name`
