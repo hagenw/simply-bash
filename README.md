@@ -8,7 +8,7 @@ Bash scripts and libraries to make your life easier.
 
 ## Installation
 
-All files of simply-bash have to be stored in the same folder. The easiest way
+All files of [simply-bash] have to be stored in the same folder. The easiest way
 to achieve this is to clone the repository:
 
 ```bash
