@@ -14,9 +14,12 @@ include() {
     source "${SIMPLY_BASH_PATH}/${file}"
 }
 
-# Make python environment functions available
+# Load python environment functions `activate`, `envs`, `create`
 include 'pyenvs.sh'
+
+# Load all completions
 include 'completion/activate-completion.bash'
+include 'completion/is-completion.bash'
 
 # Make visible in other functions
 export SIMPLY_BASH_PATH
