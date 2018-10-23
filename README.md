@@ -162,4 +162,5 @@ create env_name 2.7      # create `env_name` with python2.7 and activate it
 envs                     # list available environments
 activate env_name        # activate virtual environment `env_name`
 deactivate               # deactivate the current active environment
+delete env_name          # delete virtual environment `env_name`
 ```

@@ -19,6 +19,7 @@ include 'pyenvs.sh'
 
 # Load all completions
 include 'completion/activate-completion.bash'
+include 'completion/delete-completion.bash'
 include 'completion/is-completion.bash'
 
 # Make visible in other functions

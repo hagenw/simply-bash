@@ -5,6 +5,7 @@
 # * create
 # * activate
 # * deactivate
+# * delete
 #
 # For further documentation have a look in the README.md
 
@@ -27,10 +28,10 @@ envs() {
 			List the available virtual environments.
 
 			Options:
-			    help       show this help message
-			    conda      switch to conda and list environments
-			    pip        switch to virtualenv and list environments
-			    tool       show the tool currently used for environments
+			    help        show this help message
+			    conda       switch to conda and list environments
+			    pip         switch to virtualenv and list environments
+			    tool        show the tool currently used for environments
 			EOF
 
     if is gt "${nargs}" 1; then
@@ -89,6 +90,32 @@ activate() {
             source activate "${env}"
             deactivate() { source deactivate; }
         fi
+    else
+        error "Virtual environment ${env} does not exist!"
+    fi
+}
+
+
+# Delete virtual environment for python
+# $1 - name of environment
+delete() {
+    local env=$1
+    local nargs=$#
+    local usage
+
+    read -r -d '' usage <<- EOF
+			Usage: delete ENVNAME
+
+			Delete virtual environment ENVNAME.
+			EOF
+
+    if is not equal "${nargs}" 1; then
+        echo "${usage}"
+        return
+    fi
+
+    if is dir "${PYENVS_DIR}/${env}"; then
+        rm -rf "${PYENVS_DIR}/${env}"
     else
         error "Virtual environment ${env} does not exist!"
     fi
