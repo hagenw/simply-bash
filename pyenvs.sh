@@ -87,6 +87,7 @@ activate() {
             source "${PYENVS_DIR}/${env}/bin/activate"
         elif is equal "${PYENVS_TOOL}" "conda"; then
             source activate "${env}"
+            deactivate() { source deactivate; }
         fi
     else
         error "Virtual environment ${env} does not exist!"
