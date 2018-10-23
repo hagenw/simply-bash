@@ -148,16 +148,18 @@ units::pt_to_px 20 $res_in_ppi   # 83.33333100
 
 ### `pyenvs.sh`
 
-Manage python virtual environments in the folder `$HOME/.envs`. 
+Manage python virtual environments with `virtualenv` and `pip` in the folder
+`$HOME/.envs`. Or with `conda` in the folder `$HOME/.conda/envs`.
 This gets already sourced by `simply-bash.sh`, you can use it straight ahead.
 
 Usage:
 
 ```bash
-create env_name python3  # create virtual `env_name` and activate it
+envs tool                # see if virtualenv+pip or conda is used
+envs conda               # switch to use conda
+envs pip                 # switch to use virtualenv+pip
+create env_name 2.7      # create `env_name` with python2.7 and activate it
 envs                     # list available environments
 activate env_name        # activate virtual environment `env_name`
+deactivate               # deactivate the current active environment
 ```
-
-Note: once you activated an virtual environment, it will provide you with the
-command `deactivate` to stop it.
