@@ -30,7 +30,7 @@ envs() {
         envs
     elif is equal "${tool}" "conda"; then
         export PYENVS_TOOL="conda"
-        export PYENVS_DIR="${HOME}/.conda/envs"
+        export PYENVS_DIR="${HOME}/.conda"
         echo "# conda environments:"
         envs
     fi
