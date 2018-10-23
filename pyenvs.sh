@@ -7,19 +7,32 @@ export PYENVS_DIR="${HOME}/.envs"
 
 
 # Switch between tools and list available virtual environments
-# $1 - choose pip or conda (optional)
+# $1 - optional arguments
 envs() {
     local tool=$1
     local nargs=$#
+    local usage
+
+    read -r -d '' usage <<- EOF
+			Usage: envs [OPTIONS]
+
+			List the available virtual environments.
+
+			Options:
+			    help       show this help message
+			    conda      switch to conda and list environments
+			    pip        switch to virtualenv and list environments
+			EOF
 
     if is gt "${nargs}" 1; then
-        echo 'Usage: envs [conda|pip]'
+        echo "${usage}"
         return
     fi
 
     # List available envs
     if is equal "${nargs}" 0; then
         ls "${PYENVS_DIR}"
+        return
     fi
 
     # Switch between conda and pip
@@ -33,6 +46,9 @@ envs() {
         export PYENVS_DIR="${HOME}/.conda"
         echo "# conda environments:"
         envs
+    else
+        echo "${usage}"
+        return
     fi
 }
 
@@ -42,9 +58,16 @@ envs() {
 activate() {
     local env=$1
     local nargs=$#
+    local usage
+
+    read -r -d '' usage <<- EOF
+			Usage: activate ENVNAME
+
+			Activate virtual environment ENVNAME.
+			EOF
 
     if is not equal "${nargs}" 1; then
-        echo 'Usage: activate $ENV_NAME'
+        echo "${usage}"
         return
     fi
 
@@ -59,6 +82,7 @@ activate() {
     fi
 }
 
+
 # Create a virtual environment for python and activate it
 # $1 - name of environment
 # $2 - optional python version, default: "3"
@@ -66,9 +90,19 @@ create() {
     local env=$1
     local version=${2:-3}
     local nargs=$#
+    local usage
+
+    read -r -d '' usage <<- EOF
+			Usage: create ENVNAME [VERSION]
+
+			Create virtual environment ENVNAME and activate it.
+			Optional you can specify the python VERSION to use, e.g.
+			'2.7'. It uses conda or virtualenv as set by ´envs conda´ or
+			´envs pip´.
+			EOF
 
     if is lt "${nargs}" 1 || is gt "${nargs}" 2; then
-        echo 'Usage: create $ENVNAME [$PYTHON_INTERPRETER]'
+        echo "${usage}"
         return
     fi
 
