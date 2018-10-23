@@ -1,4 +1,12 @@
 # Python virtual environments library
+#
+# Commands for handling virtual environments with conda or virtualenv+pip:
+# * envs
+# * create
+# * activate
+# * deactivate
+#
+# For further documentation have a look in the README.md
 
 
 # Default tool to manage virtual environments
@@ -22,6 +30,7 @@ envs() {
 			    help       show this help message
 			    conda      switch to conda and list environments
 			    pip        switch to virtualenv and list environments
+			    tool       show the tool currently used for environments
 			EOF
 
     if is gt "${nargs}" 1; then
@@ -46,6 +55,8 @@ envs() {
         export PYENVS_DIR="${HOME}/.conda"
         echo "# conda environments:"
         envs
+    elif is equal "${tool}" "tool"; then
+        echo "${PYENVS_TOOL}"
     else
         echo "${usage}"
         return
