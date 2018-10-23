@@ -127,8 +127,7 @@ create() {
             --no-site-packages "${PYENVS_DIR}/${env}"
     elif is equal "${PYENVS_TOOL}" "conda"; then
         conda create \
-            --prefix "${PYENVS_DIR}" \
-            --name "${env}" \
+            --prefix "${PYENVS_DIR}/${env}" \
             python="${version}"
     fi
     activate "${env}"
