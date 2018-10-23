@@ -23,16 +23,16 @@ envs() {
     local usage
 
     read -r -d '' usage <<- EOF
-			Usage: envs [OPTIONS]
+		Usage: envs [OPTIONS]
 
-			List the available virtual environments.
+		List the available virtual environments.
 
-			Options:
-			    help        show this help message
-			    conda       switch to conda and list environments
-			    pip         switch to virtualenv and list environments
-			    tool        show the tool currently used for environments
-			EOF
+		Options:
+		    help        show this help message
+		    conda       switch to conda and list environments
+		    pip         switch to virtualenv and list environments
+		    tool        show the tool currently used for environments
+		EOF
 
     if is gt "${nargs}" 1; then
         echo "${usage}"
@@ -73,10 +73,10 @@ activate() {
     local usage
 
     read -r -d '' usage <<- EOF
-			Usage: activate ENVNAME
+		Usage: activate ENVNAME
 
-			Activate virtual environment ENVNAME.
-			EOF
+		Activate virtual environment ENVNAME.
+		EOF
 
     if is not equal "${nargs}" 1; then
         echo "${usage}"
@@ -104,10 +104,10 @@ delete() {
     local usage
 
     read -r -d '' usage <<- EOF
-			Usage: delete ENVNAME
+		Usage: delete ENVNAME
 
-			Delete virtual environment ENVNAME.
-			EOF
+		Delete virtual environment ENVNAME.
+		EOF
 
     if is not equal "${nargs}" 1; then
         echo "${usage}"
@@ -132,13 +132,13 @@ create() {
     local usage
 
     read -r -d '' usage <<- EOF
-			Usage: create ENVNAME [VERSION]
+		Usage: create ENVNAME [VERSION]
 
-			Create virtual environment ENVNAME and activate it.
-			Optional you can specify the python VERSION to use, e.g.
-			'2.7'. It uses conda or virtualenv as set by ´envs conda´ or
-			´envs pip´.
-			EOF
+		Create virtual environment ENVNAME and activate it.
+		Optional you can specify the python VERSION to use, e.g.
+		'2.7'. It uses conda or virtualenv as set by ´envs conda´ or
+		´envs pip´.
+		EOF
 
     if is lt "${nargs}" 1 || is gt "${nargs}" 2; then
         echo "${usage}"
