@@ -164,3 +164,13 @@ activate env_name        # activate virtual environment `env_name`
 deactivate               # deactivate the current active environment
 delete env_name          # delete virtual environment `env_name`
 ```
+
+You can change the folder where the environments are stored by exporting the
+following variables:
+
+```bash
+export PYENVS_DIR_PIP="${HOME}/.envs"
+export PYENVS_DIR_CONDA="${HOME}/.conda/envs"
+```
+
+Just change the paths to the desired ones.

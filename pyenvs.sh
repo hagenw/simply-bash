@@ -10,9 +10,12 @@
 # For further documentation have a look in the README.md
 
 
+# Folders for storing the environments
+export PYENVS_DIR_PIP="${HOME}/.envs"
+export PYENVS_DIR_CONDA="${HOME}/.conda/envs"
+
 # Default tool to manage virtual environments
 export PYENVS_TOOL="pip"
-export PYENVS_DIR="${HOME}/.envs"
 
 
 # Switch between tools and list available virtual environments
@@ -41,21 +44,20 @@ envs() {
 
     # List available envs
     if is equal "${nargs}" 0; then
-        ls "${PYENVS_DIR}"
+        ls "$(_envdir)"
         return
     fi
 
     # Switch between conda and pip
     if is equal "${tool}" "pip"; then
         export PYENVS_TOOL="pip"
-        export PYENVS_DIR="${HOME}/.envs"
         echo "# pip environments:"
         envs
     elif is equal "${tool}" "conda"; then
         export PYENVS_TOOL="conda"
-        export PYENVS_DIR="${HOME}/.conda/envs"
         echo "# conda environments:"
         envs
+    # Show current active tool (conda or pip)
     elif is equal "${tool}" "tool"; then
         echo "${PYENVS_TOOL}"
     else
@@ -83,10 +85,10 @@ activate() {
         return
     fi
 
-    if is dir "${PYENVS_DIR}/${env}"; then
-        if is equal "${PYENVS_TOOL}" "pip"; then
-            source "${PYENVS_DIR}/${env}/bin/activate"
-        elif is equal "${PYENVS_TOOL}" "conda"; then
+    if is dir "$(_envdir)/${env}"; then
+        if is equal "$(envs tool)" "pip"; then
+            source "$(_envdir)/${env}/bin/activate"
+        elif is equal "$(envs tool)" "conda"; then
             source activate "${env}"
             deactivate() { source deactivate; }
         fi
@@ -114,8 +116,8 @@ delete() {
         return
     fi
 
-    if is dir "${PYENVS_DIR}/${env}"; then
-        rm -rf "${PYENVS_DIR}/${env}"
+    if is dir "$(_envdir)/${env}"; then
+        rm -rf "$(_envdir)/${env}"
     else
         error "Virtual environment ${env} does not exist!"
     fi
@@ -149,14 +151,25 @@ create() {
         error 'The python version has to start with "2" or "3"'
     fi
 
-    if is equal "${PYENVS_TOOL}" "pip"; then
+    if is equal "$(envs tool)" "pip"; then
         virtualenv \
             --python="/usr/bin/python${version}" \
-            --no-site-packages "${PYENVS_DIR}/${env}"
+            --no-site-packages "$(_envdir)/${env}"
     elif is equal "${PYENVS_TOOL}" "conda"; then
         conda create \
-            --prefix "${PYENVS_DIR}/${env}" \
+            --yes \
+            --prefix "$(_envdir)/${env}" \
             python="${version}"
     fi
     activate "${env}"
+}
+
+
+# Helper function to select environment dir
+_envdir() {
+    if is equal "$(envs tool)" "pip"; then
+        echo "${PYENVS_DIR_PIP}"
+    elif is equal "$(envs tool)" "conda"; then
+        echo "${PYENVS_DIR_CONDA}"
+    fi
 }
