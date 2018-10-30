@@ -68,6 +68,26 @@ assert "units::pt_to_inch 300" "4.16666666"
 assert "units::inch_to_px 4 ${RES_IN_PPI}" "1200"
 assert "units::pt_to_px 20 ${RES_IN_PPI}" "83.33333100"
 
+# --- pyenvs.sh ---
+# Set temporary env folder
+mkdir ".envs"
+export PYENVS_DIR_PIP="./.envs"
+assert "envs pip" "# pip environments:"
+assert_true "envs pip && create pip-env"
+assert "envs" "pip-env"
+assert_true "envs pip && activate pip-env && deactivate"
+assert_true "envs pip && delete pip-env"
+assert_false "envs pip && activate pip-env"
+assert "envs" ""
+export PYENVS_DIR_CONDA="./.envs"
+assert "envs conda" "# conda environments:"
+assert_true "envs conda && create conda-env"
+assert "envs" "conda-env"
+assert_true "envs conda && activate conda-env && deactivate"
+assert_true "envs conda && delete conda-env"
+assert_false "envs conda && activate conda-env"
+assert "envs" ""
+
 # --- is ---
 # is file
 assert_true  "is file ./file"
