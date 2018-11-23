@@ -35,6 +35,7 @@ envs() {
 		    conda       switch to conda and list environments
 		    pip         switch to virtualenv and list environments
 		    tool        show the tool currently used for environments
+		    size        disk size of environments
 		EOF
 
     if is gt "${nargs}" 1; then
@@ -60,6 +61,9 @@ envs() {
     # Show current active tool (conda or pip)
     elif is equal "${tool}" "tool"; then
         echo "${PYENVS_TOOL}"
+    # Show disk size
+    elif is equal "${tool}" "size"; then
+        du -hs "$(_envdir)" | cut -f1
     else
         echo "${usage}"
         return
