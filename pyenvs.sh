@@ -38,6 +38,12 @@ envs() {
 		    tool        show the tool currently used for environments
 		    size        disk size of environments
 		    location    dir where environments are stored
+
+		Related external programs:
+		    create ENVNAME [PYTHON_VERSION]
+		    activate ENVNAME
+		    deactivate
+		    delete ENVNAME
 		EOF
 
     if is gt "${nargs}" 1; then
@@ -144,10 +150,10 @@ create() {
     local usage
 
     read -r -d '' usage <<- EOF
-		Usage: create ENVNAME [VERSION]
+		Usage: create ENVNAME [PYTHON_VERSION]
 
 		Create virtual environment ENVNAME and activate it.
-		Optional you can specify the python VERSION to use, e.g.
+		Optional you can specify the PYTHON_VERSION to use, e.g.
 		'2.7'. It uses conda or virtualenv as set by ´envs conda´ or
 		´envs pip´.
 		EOF
