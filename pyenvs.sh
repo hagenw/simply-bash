@@ -28,10 +28,11 @@ envs() {
     read -r -d '' usage <<- EOF
 		Usage: envs [OPTIONS]
 
-		List the available virtual environments.
+		Handle Python virtual environments.
 
 		Options:
 		    help        show this help message
+		    list        list environments (default command)
 		    conda       switch to conda and list environments
 		    pip         switch to virtualenv and list environments
 		    tool        show the tool currently used for environments
@@ -49,9 +50,10 @@ envs() {
         ls "$(_envdir)"
         return
     fi
-
+    if is equal "${command}" "list"; then
+        ls "$(_envdir)"
     # Switch between conda and pip
-    if is equal "${command}" "pip"; then
+    elif is equal "${command}" "pip"; then
         export PYENVS_TOOL="pip"
         echo "# pip environments:"
         envs
