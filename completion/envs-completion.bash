@@ -4,7 +4,7 @@
 _envs() {
     local current arguments
     current="${COMP_WORDS[COMP_CWORD]}"
-    arguments="conda pip help tool"
+    arguments="conda virtualenv help tool size"
     COMPREPLY=( $(compgen -W "${arguments}" -- ${current}) )
     return 0
 }
