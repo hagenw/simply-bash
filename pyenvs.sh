@@ -1,6 +1,6 @@
 # Python virtual environments library
 #
-# Commands for handling virtual environments with conda or virtualenv+pip:
+# Commands for handling virtual environments with conda or virtualenv:
 # * envs
 # * create
 # * activate
@@ -11,11 +11,11 @@
 
 
 # Folders for storing the environments
-export PYENVS_DIR_PIP="${HOME}/.envs"
+export PYENVS_DIR_VIRTUALENV="${HOME}/.envs"
 export PYENVS_DIR_CONDA="${HOME}/.conda/envs"
 
 # Default tool to manage virtual environments
-export PYENVS_TOOL="pip"
+export PYENVS_TOOL="virtualenv"
 
 
 # Switch between tools and list available virtual environments
@@ -34,7 +34,7 @@ envs() {
 		    help        show this help message
 		    list        list environments (default command)
 		    conda       switch to conda and list environments
-		    pip         switch to virtualenv and list environments
+		    virtualenv  switch to virtualenv and list environments
 		    tool        show the tool currently used for environments
 		    size        disk size of environments
 		    location    dir where environments are stored
@@ -58,16 +58,16 @@ envs() {
     fi
     if is equal "${command}" "list"; then
         ls "$(_envdir)"
-    # Switch between conda and pip
-    elif is equal "${command}" "pip"; then
-        export PYENVS_TOOL="pip"
-        echo "# pip environments:"
+    # Switch between conda and virtualenv
+    elif is equal "${command}" "virtualenv"; then
+        export PYENVS_TOOL="virtualenv"
+        echo "# virtualenv environments:"
         envs
     elif is equal "${command}" "conda"; then
         export PYENVS_TOOL="conda"
         echo "# conda environments:"
         envs
-    # Show current active tool (conda or pip)
+    # Show current active tool (conda or virtualenv)
     elif is equal "${command}" "tool"; then
         echo "${PYENVS_TOOL}"
     # Show disk size
@@ -102,7 +102,7 @@ activate() {
     fi
 
     if is dir "$(_envdir)/${env}"; then
-        if is equal "$(envs tool)" "pip"; then
+        if is equal "$(envs tool)" "virtualenv"; then
             source "$(_envdir)/${env}/bin/activate"
         elif is equal "$(envs tool)" "conda"; then
             source activate "${env}"
@@ -155,7 +155,7 @@ create() {
 		Create virtual environment ENVNAME and activate it.
 		Optional you can specify the PYTHON_VERSION to use, e.g.
 		'2.7'. It uses conda or virtualenv as set by ´envs conda´ or
-		´envs pip´.
+		´envs virtualenv´.
 		EOF
 
     if is lt "${nargs}" 1 || is gt "${nargs}" 2; then
@@ -167,7 +167,7 @@ create() {
         error 'The python version has to start with "2" or "3"'
     fi
 
-    if is equal "$(envs tool)" "pip"; then
+    if is equal "$(envs tool)" "virtualenv"; then
         virtualenv \
             --python="/usr/bin/python${version}" \
             --no-site-packages "$(_envdir)/${env}"
@@ -183,8 +183,8 @@ create() {
 
 # Helper function to select environment dir
 _envdir() {
-    if is equal "$(envs tool)" "pip"; then
-        echo "${PYENVS_DIR_PIP}"
+    if is equal "$(envs tool)" "virtualenv"; then
+        echo "${PYENVS_DIR_VIRTUALENV}"
     elif is equal "$(envs tool)" "conda"; then
         echo "${PYENVS_DIR_CONDA}"
     fi
