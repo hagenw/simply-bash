@@ -21,7 +21,7 @@ export PYENVS_TOOL="pip"
 # Switch between tools and list available virtual environments
 # $1 - optional arguments
 envs() {
-    local tool=$1
+    local command=$1
     local nargs=$#
     local usage
 
@@ -51,22 +51,22 @@ envs() {
     fi
 
     # Switch between conda and pip
-    if is equal "${tool}" "pip"; then
+    if is equal "${command}" "pip"; then
         export PYENVS_TOOL="pip"
         echo "# pip environments:"
         envs
-    elif is equal "${tool}" "conda"; then
+    elif is equal "${command}" "conda"; then
         export PYENVS_TOOL="conda"
         echo "# conda environments:"
         envs
     # Show current active tool (conda or pip)
-    elif is equal "${tool}" "tool"; then
+    elif is equal "${command}" "tool"; then
         echo "${PYENVS_TOOL}"
     # Show disk size
-    elif is equal "${tool}" "size"; then
+    elif is equal "${command}" "size"; then
         du -hs "$(_envdir)" | cut -f1
     # Show dir location
-    elif is equal "${tool}" "location"; then
+    elif is equal "${command}" "location"; then
         _envdir
     else
         echo "${usage}"
