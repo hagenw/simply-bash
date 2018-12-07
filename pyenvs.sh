@@ -102,9 +102,9 @@ activate() {
     fi
 
     if is dir "$(_envdir)/${env}"; then
-        if is equal "$(envs tool)" "virtualenv"; then
-            source "$(_envdir)/${env}/bin/activate"
-        elif is equal "$(envs tool)" "conda"; then
+        if is equal "${PYENVS_TOOL}" "virtualenv"; then
+            source "${PYENVS_DIR_VIRTUALENV}/${env}/bin/activate"
+        elif is equal "${PYENVS_TOOL}" "conda"; then
             source activate "${env}"
             deactivate() { source deactivate; }
         fi
@@ -167,14 +167,14 @@ create() {
         error 'The python version has to start with "2" or "3"'
     fi
 
-    if is equal "$(envs tool)" "virtualenv"; then
+    if is equal "${PYENVS_TOOL}" "virtualenv"; then
         virtualenv \
             --python="/usr/bin/python${version}" \
-            --no-site-packages "$(_envdir)/${env}"
+            --no-site-packages "${PYENVS_DIR_VIRTUALENV}/${env}"
     elif is equal "${PYENVS_TOOL}" "conda"; then
         conda create \
             --yes \
-            --prefix "$(_envdir)/${env}" \
+            --prefix "${PYENVS_DIR_CONDA}/${env}" \
             python="${version}"
     fi
     activate "${env}"
@@ -183,9 +183,9 @@ create() {
 
 # Helper function to select environment dir
 _envdir() {
-    if is equal "$(envs tool)" "virtualenv"; then
+    if is equal "${PYENVS_TOOL}" "virtualenv"; then
         echo "${PYENVS_DIR_VIRTUALENV}"
-    elif is equal "$(envs tool)" "conda"; then
+    elif is equal "${PYENVS_TOOL}" "conda"; then
         echo "${PYENVS_DIR_CONDA}"
     fi
 }
