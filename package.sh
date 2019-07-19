@@ -1,1 +1,1 @@
-BASH_COMPLETIONS=completions/activate.bash:completions/delete.bash:completions/envs.bash:completions/is.bash
+BASH_COMPLETIONS=completion/activate.bash:completion/delete.bash:completion/envs.bash:completion/is.bash
