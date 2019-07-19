@@ -1,0 +1,1 @@
+BASH_COMPLETIONS=completions/activate:completions/delete:completions/envs:completions/is
