@@ -1,10 +1,10 @@
 #!/bin/bash
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd -P )
+ROOT=$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd -P )
 RES_IN_PPI=300
 
-source "${DIR}/simply-bash.sh"
-source "${DIR}/tests/assert.sh"
+source "${ROOT}/simply-bash.sh"
+source "${ROOT}/tests/assert.sh"
 
 
 #
@@ -45,6 +45,12 @@ assert_false() {
 # assert <command> <expected stdout> [stdin]
 
 
+# --- units.sh ---
+include "lib/units.sh"
+assert "units::pt_to_inch 300" "4.16666666"
+assert "units::inch_to_px 4 ${RES_IN_PPI}" "1200"
+assert "units::pt_to_px 20 ${RES_IN_PPI}" "83.33333100"
+
 # --- math.sh ---
 include "lib/math.sh"
 assert "math::plus 1 2" "3"
@@ -61,12 +67,6 @@ assert "math::floor 0.1" "0"
 assert "math::ceil 0.1" "1"
 assert "math::round 0.5" "1"
 assert "math::abs -1" "1"
-
-# --- units.sh ---
-include "lib/units.sh"
-assert "units::pt_to_inch 300" "4.16666666"
-assert "units::inch_to_px 4 ${RES_IN_PPI}" "1200"
-assert "units::pt_to_px 20 ${RES_IN_PPI}" "83.33333100"
 
 # --- pyenvs.sh ---
 include "lib/pyenvs.sh"
