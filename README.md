@@ -6,10 +6,24 @@ Bash scripts and libraries to make your life easier.
 [travis-url]: https://travis-ci.org/hagenw/simply-bash
 
 
-## Installation
+## Installation with package manager
 
-All files of [simply-bash] have to be stored in the same folder. The easiest way
-to achieve this is to clone the repository:
+The easiest way to install [simply-bash] is via [basher]:
+
+```bash
+$ basher install hagenw/simply-bash
+```
+
+Afterwards all binaries are directly available and libraries can be included via
+
+```bash
+include hagenw/simply-bash lib/math.sh
+```
+
+
+## Installation from repository
+
+To manually install it from this repository, clone it with:
 
 ```bash
 git clone https://github.com/hagenw/simply-bash.git ~/git/simply-bash
@@ -23,15 +37,15 @@ In order to use it you have to source the `simply-bash.sh` file:
 source ~/git/simply-bash/simply-bash.sh
 ```
 
-To automate this, add it to your `.bashrc`.  Afterwards all scripts are
-available and you can source the libraries independent of your current directory
-by:
+To automate this, add it to your `.bashrc`.  Afterwards the libraries can be
+included with:
 
 ```bash
 include lib/math.sh
 ```
 
 [simply-bash]: https://github.com/hagenw/simply-bash
+[basher]: https://github.com/basherpm/basher
 
 
 ## Usage
@@ -115,7 +129,7 @@ scripts.
 Usage:
 
 ```bash
-include lib/math.sh
+source lib/math.sh
 math::plus 1 2      # 3
 math::minus 3 2     # 1
 math::divide 6 2    # 3.00000000
@@ -139,7 +153,7 @@ Convert between pixels, points, and inches.
 Usage:
 
 ```bash
-include lib/units.sh
+source lib/units.sh
 res_in_ppi=300
 units::pt_to_inch 300            # 4.16666666
 units::inch_to_px 4 $res_in_ppi  # 1200
@@ -150,11 +164,11 @@ units::pt_to_px 20 $res_in_ppi   # 83.33333100
 
 Manage python virtual environments with `virtualenv` in the folder
 `$HOME/.envs`. Or with `conda` in the folder `$HOME/.conda/envs`.
-This gets already sourced by `simply-bash.sh`, you can use it straight ahead.
 
 Usage:
 
 ```bash
+source lib/pyenvs.sh
 envs tool                # see if virtualenv or conda is used
 envs size                # disk size of environments
 envs location            # dir where environments are stored

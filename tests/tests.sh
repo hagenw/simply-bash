@@ -69,6 +69,7 @@ assert "units::inch_to_px 4 ${RES_IN_PPI}" "1200"
 assert "units::pt_to_px 20 ${RES_IN_PPI}" "83.33333100"
 
 # --- pyenvs.sh ---
+include "lib/pyenvs.sh"
 # Set temporary env folder
 mkdir ".envs"
 export PYENVS_DIR_VIRTUALENV="./.envs"

@@ -14,9 +14,6 @@ include() {
     source "${SIMPLY_BASH_PATH}/${file}"
 }
 
-# Load python environment functions `activate`, `envs`, `create`
-include 'lib/pyenvs.sh'
-
 # Load all completions
 include 'completion/activate.bash'
 include 'completion/delete.bash'
