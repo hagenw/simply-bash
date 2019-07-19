@@ -28,7 +28,7 @@ available and you can source the libraries independent of your current directory
 by:
 
 ```bash
-include math.sh
+include lib/math.sh
 ```
 
 [simply-bash]: https://github.com/hagenw/simply-bash
@@ -115,7 +115,7 @@ scripts.
 Usage:
 
 ```bash
-include math.sh
+include lib/math.sh
 math::plus 1 2      # 3
 math::minus 3 2     # 1
 math::divide 6 2    # 3.00000000
@@ -139,7 +139,7 @@ Convert between pixels, points, and inches.
 Usage:
 
 ```bash
-include units.sh
+include lib/units.sh
 res_in_ppi=300
 units::pt_to_inch 300            # 4.16666666
 units::inch_to_px 4 $res_in_ppi  # 1200

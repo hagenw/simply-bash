@@ -4,7 +4,7 @@
 
 readonly SIMPLY_BASH_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 
-PATH="${PATH}:${SIMPLY_BASH_PATH}"
+PATH="${PATH}:${SIMPLY_BASH_PATH}/bin"
 
 # $1 - library file
 # NOTE: include needs to be a function that gets sourced. If it would be a bash
@@ -15,13 +15,13 @@ include() {
 }
 
 # Load python environment functions `activate`, `envs`, `create`
-include 'pyenvs.sh'
+include 'lib/pyenvs.sh'
 
 # Load all completions
-include 'completion/activate-completion.bash'
-include 'completion/delete-completion.bash'
-include 'completion/envs-completion.bash'
-include 'completion/is-completion.bash'
+include 'completion/activate.bash'
+include 'completion/delete.bash'
+include 'completion/envs.bash'
+include 'completion/is.bash'
 
 # Make visible in other functions
 export SIMPLY_BASH_PATH

@@ -46,7 +46,7 @@ assert_false() {
 
 
 # --- math.sh ---
-include "math.sh"
+include "lib/math.sh"
 assert "math::plus 1 2" "3"
 assert "math::minus 3 2" "1"
 assert "math::divide 6 2" "3.00000000"
@@ -63,7 +63,7 @@ assert "math::round 0.5" "1"
 assert "math::abs -1" "1"
 
 # --- units.sh ---
-include "units.sh"
+include "lib/units.sh"
 assert "units::pt_to_inch 300" "4.16666666"
 assert "units::inch_to_px 4 ${RES_IN_PPI}" "1200"
 assert "units::pt_to_px 20 ${RES_IN_PPI}" "83.33333100"
