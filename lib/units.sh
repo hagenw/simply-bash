@@ -1,6 +1,8 @@
 # Units library
 
-source "math.sh"
+ROOT=$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd -P )
+
+source "${ROOT}/lib/math.sh"
 
 # $1 - value in pt
 units::pt_to_inch() {
