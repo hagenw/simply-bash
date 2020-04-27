@@ -170,7 +170,7 @@ create() {
     if is equal "${PYENVS_TOOL}" "virtualenv"; then
         virtualenv \
             --python="/usr/bin/python${version}" \
-            --no-site-packages "${PYENVS_DIR_VIRTUALENV}/${env}"
+            "${PYENVS_DIR_VIRTUALENV}/${env}"
     elif is equal "${PYENVS_TOOL}" "conda"; then
         conda create \
             --yes \
