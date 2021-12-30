@@ -15,9 +15,6 @@ include() {
 }
 
 # Load all completions
-include 'completion/activate.bash'
-include 'completion/delete.bash'
-include 'completion/envs.bash'
 include 'completion/is.bash'
 
 # Make visible in other functions

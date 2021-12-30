@@ -159,34 +159,3 @@ units::pt_to_inch 300            # 4.16666666
 units::inch_to_px 4 $res_in_ppi  # 1200
 units::pt_to_px 20 $res_in_ppi   # 83.33333100
 ```
-
-### `pyenvs.sh`
-
-Manage python virtual environments with `virtualenv` in the folder
-`$HOME/.envs`. Or with `conda` in the folder `$HOME/.conda/envs`.
-
-Usage:
-
-```bash
-source lib/pyenvs.sh
-envs tool                # see if virtualenv or conda is used
-envs size                # disk size of environments
-envs location            # dir where environments are stored
-envs conda               # switch to use conda
-envs virtualenv          # switch to use virtualenv
-create env_name 2.7      # create `env_name` with python2.7 and activate it
-envs                     # list available environments
-activate env_name        # activate virtual environment `env_name`
-deactivate               # deactivate the current active environment
-delete env_name          # delete virtual environment `env_name`
-```
-
-You can change the folder where the environments are stored by exporting the
-following variables:
-
-```bash
-export PYENVS_DIR_VIRTUALENV="${HOME}/.envs"
-export PYENVS_DIR_CONDA="${HOME}/.conda/envs"
-```
-
-Just change the paths to the desired ones.
